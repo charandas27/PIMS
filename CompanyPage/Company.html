@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data from MongoDB</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff; /* Light blue */
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #4682b4; /* Dark blue */
+        }
+
+        #data-container {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #ccc;
+            background-color: #fff; /* White */
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4682b4; /* Dark blue */
+            color: white;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2; /* Light gray */
+        }
+    </style>
+</head>
+<body>
+    <h1>Fetched Data</h1>
+    <div id="data-container"></div>
+
+    <script>
+        const container = document.getElementById('data-container');
+
+        async function fetchData() {
+            try {
+                const response = await fetch('http://localhost:3000/users');
+                const data = await response.json();
+                console.log(data);
+
+                // Display data here
+                var html ='<table><thead>';
+                html += '<tr><th>Student ID</th><th>Name</th><th>Major</th></tr></thead>';
+                html += '<tbody>';
+                data.forEach(item => {
+                    html += '<tr>';
+                    html += '<td>'+ item.student_id + '</td>';
+                    html += '<td>' + item.name + '</td>';
+                    html += '<td>' + item.major + '</td>';
+                    html += '</tr>';
+                });
+
+                html += '</tbody></table>';
+                container.innerHTML = html;
+            
+            } catch (error) {
+                console.error(error);
+                container.textContent = 'Error fetching data';
+            }
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>

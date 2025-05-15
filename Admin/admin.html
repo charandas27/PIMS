@@ -1,0 +1,187 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data from MongoDB</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff; /* Light blue */
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #4682b4; /* Dark blue */
+        }
+
+        #data-container {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #ccc;
+            background-color: #fff; /* White */
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4682b4; /* Dark blue */
+            color: white;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2; /* Light gray */
+        }
+    </style>
+</head>
+<body>
+    <h1>Fetched Data</h1>
+    <div id="data-container"></div>
+
+    <script>
+        const container = document.getElementById('data-container');
+
+        async function fetchData() {
+            try {
+                const response = await fetch('http://localhost:3000/users');
+                const data = await response.json();
+                console.log(data);
+
+                // Display data here
+                var html ='<table><thead>';
+                html += '<tr><th>Student ID</th><th>Name</th><th>Major</th></tr></thead>';
+                html += '<tbody>';
+                data.forEach(item => {
+                    html += '<tr>';
+                    html += '<td>'+ item.student_id + '</td>';
+                    html += '<td>' + item.name + '</td>';
+                    html += '<td>' + item.major + '</td>';
+                    html += '</tr>';
+                });
+
+                html += '</tbody></table>';
+                container.innerHTML = html;
+            
+            } catch (error) {
+                console.error(error);
+                container.textContent = 'Error fetching data';
+            }
+        }
+
+        fetchData();
+    </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data from MongoDB</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff; /* Light blue */
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #4682b4; /* Dark blue */
+        }
+
+        #data-container, #company-container {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #ccc;
+            background-color: #fff; /* White */
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4682b4; /* Dark blue */
+            color: white;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2; /* Light gray */
+        }
+    </style>
+</head>
+<body>
+    <h1>Student Data </h1>
+    <div id="data-container"></div>
+    <h1>Company Data</h1>
+    <div id="company-container"></div>
+
+    <script>
+        const dataContainer = document.getElementById('data-container');
+        const companyContainer = document.getElementById('company-container');
+
+        async function fetchData() {
+            try {
+                const [usersResponse, companyResponse] = await Promise.all([
+                    fetch('http://localhost:3000/users'),
+                    fetch('http://localhost:3000/company')
+                ]);
+
+                const usersData = await usersResponse.json();
+                const companyData = await companyResponse.json();
+                console.log(usersData, companyData);
+
+                // Display user data
+                let userHtml = '<table><thead>';
+                userHtml += '<tr><th>Student ID</th><th>Name</th><th>Major</th></tr></thead>';
+                userHtml += '<tbody>';
+                usersData.forEach(item => {
+                    userHtml += '<tr>';
+                    userHtml += '<td>' + item.student_id + '</td>';
+                    userHtml += '<td>' + item.name + '</td>';
+                    userHtml += '<td>' + item.major + '</td>';
+                    userHtml += '</tr>';
+                });
+                userHtml += '</tbody></table>';
+                dataContainer.innerHTML = userHtml;
+
+                // Display company data
+                let companyHtml = '<table><thead>';
+                companyHtml += '<tr><th>Company Name</th><th>Required CGPA</th><th>Salary</th><th>Location</th></tr></thead>';
+                companyHtml += '<tbody>';
+                companyData.forEach(item => {
+                    companyHtml += '<tr>';
+                    companyHtml += '<td>' + item.companyname + '</td>';
+                    companyHtml += '<td>' + item.required_cgpa + '</td>';
+                    companyHtml += '<td>' + item.salary + '</td>';
+                    companyHtml += '<td>' + item.location + '</td>';
+                    companyHtml += '</tr>';
+                });
+                companyHtml += '</tbody></table>';
+                companyContainer.innerHTML = companyHtml;
+
+            } catch (error) {
+                console.error(error);
+                dataContainer.textContent = 'Error fetching data';
+                companyContainer.textContent = 'Error fetching company data';
+            }
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>
